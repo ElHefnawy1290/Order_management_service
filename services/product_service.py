@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from models import models
 from schemas import Product as product_schema
 
-def CreateProdcut(db: Session, product: product_schema.ProductCreate):
+def CreateProduct(db: Session, product: product_schema.ProductCreate):
     db_product = models.Product(
         name = product.name,
         description = product.description,
