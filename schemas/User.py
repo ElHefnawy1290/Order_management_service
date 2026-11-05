@@ -15,3 +15,7 @@ class UserResponse(UserBase):
 
     class config:
         from_attributes = True
+
+class UserLogin(BaseModel):
+    username: str
+    password: str
