@@ -13,5 +13,5 @@ class OrderItemsResponse(OrderItems):
     id: int
     purchased_price: Decimal
 
-    class config:
+    class Config:
         from_attributes = True

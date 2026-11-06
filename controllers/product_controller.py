@@ -27,3 +27,11 @@ def read_product(product_id: int, db: Session = Depends(get_db)):
 @router.post("/", response_model=product_schema.ProductResponse, status_code=status.HTTP_201_CREATED)
 def create_product(product: product_schema.ProductCreate, db: Session = Depends(get_db)):
     return product_service.CreateProduct(db=db, product=product)
+
+@router.delete("/{product_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_product(product_id: int, db: Session = Depends(get_db)):
+    product = product_service.get_product(db=db, product_id=product_id)
+    if not product:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
+    db.delete(product)
+    db.commit()

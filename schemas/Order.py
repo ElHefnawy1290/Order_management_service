@@ -9,10 +9,13 @@ class OrderBase(BaseModel):
 class OrderCreate(OrderBase):
     pass
 
+class OrderStatusUpdate(BaseModel):
+    status: str
+
 class OrderResponse(OrderBase):
     id : int
     total_price : Decimal
     timestamp: datetime
 
-    class config:
+    class Config:
         from_attributes = True

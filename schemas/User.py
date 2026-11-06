@@ -3,18 +3,21 @@ from datetime import datetime
 
 class UserBase(BaseModel):
     username : str
-    role : str = "staff"
 
 class UserCreate(UserBase):
-    pass
     password : str
 
 class UserResponse(UserBase):
     id: int
+    role: str
     created_at: datetime
 
-    class config:
+    class Config:
         from_attributes = True
+
+class UserUpdate(BaseModel):
+    username: str | None = None
+    password: str | None = None
 
 class UserLogin(BaseModel):
     username: str

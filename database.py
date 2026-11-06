@@ -5,9 +5,17 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
 load_dotenv()
-db_password = os.getenv("DB_PASSWORD")
-SQLALCHEMY_DATABASE_URL = f"postgresql://admin:{db_password}@localhost:5432/shop_db"
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL")
+if not SQLALCHEMY_DATABASE_URL:
+    db_host = os.getenv("DB_HOST")
+    if db_host:
+        db_password = os.getenv("DB_PASSWORD", "")
+        SQLALCHEMY_DATABASE_URL = f"postgresql://admin:{db_password}@{db_host}:5432/shop_db"
+    else:
+        SQLALCHEMY_DATABASE_URL = "sqlite:///./order_management.db"
+
+connect_args = {"check_same_thread": False} if SQLALCHEMY_DATABASE_URL.startswith("sqlite") else {}
+engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args=connect_args)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind = engine)
 Base = declarative_base()
 

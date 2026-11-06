@@ -5,10 +5,11 @@ from schemas import User as user_schema
 import os
 import jwt
 from datetime import datetime, timedelta, timezone
+from typing import cast
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["pbkdf2_sha256", "bcrypt"], deprecated="auto")
 
-JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
+JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "development-only-change-me")
 JWT_ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
@@ -25,7 +26,7 @@ def create_user(db: Session, user: user_schema.UserCreate):
     db_user = models.User(
         username = user.username,
         password_hash = hashed_password,
-        role = user.role
+        role = "user"
     )
 
     db.add(db_user)
@@ -50,3 +51,15 @@ def authenticate(db: Session, username: str, password: str):
         return None
 
     return user
+
+def update_user(db: Session, db_user: models.User, updates: user_schema.UserUpdate):
+    if updates.username is not None:
+        existing = get_user_by_username(db, updates.username)
+        if existing is not None and cast(int, existing.id) != cast(int, db_user.id):
+            raise ValueError("Username already registered")
+        setattr(db_user, "username", updates.username)
+    if updates.password:
+        db_user.password_hash = pwd_context.hash(updates.password)
+    db.commit()
+    db.refresh(db_user)
+    return db_user

@@ -14,5 +14,5 @@ class ProductCreate(ProductBase):
 class ProductResponse(ProductBase):
     id: int
 
-    class config:
+    class Config:
         from_attributes = True
