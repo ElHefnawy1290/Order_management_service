@@ -24,3 +24,28 @@ A robust, production-ready backend service for managing e-commerce operations, b
    ```bash
    git clone [https://github.com/ElHefnawy1290/Order_management_service.git](https://github.com/ElHefnawy1290/Order_management_service.git)
    cd Order_management_service
+   ```
+
+2. **Create a virtual environment and install dependencies:**
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+   pip install -r requirements.txt
+   ```
+
+3. **Configure Environment Variables:**
+   Create a `.env` file in the root directory and add your credentials:
+   ```env
+   DATABASE_URL=postgresql://user:password@localhost/dbname
+   JWT_SECRET_KEY=your_secure_random_hex_string
+   PAYPAL_CLIENT_ID=your_paypal_client_id
+   PAYPAL_SECRET=your_paypal_secret
+   ```
+
+4. **Run the Application:**
+   ```bash
+   uvicorn main:app --reload
+   ```
+
+5. **View API Documentation:**
+   Open your browser and navigate to `http://127.0.0.1:8000/docs` to interact with the Swagger UI.
